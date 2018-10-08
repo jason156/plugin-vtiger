@@ -18,6 +18,7 @@ use Mautic\PluginBundle\Entity\Integration;
 use MauticPlugin\IntegrationsBundle\Exception\IntegrationNotFoundException;
 use MauticPlugin\IntegrationsBundle\Helper\IntegrationsHelper;
 use MauticPlugin\MauticVtigerCrmBundle\Integration\VtigerCrmIntegration;
+use MauticPlugin\MauticVtigerCrmBundle\Settings\SettingsObject;
 use MauticPlugin\MauticVtigerCrmBundle\Vtiger\Repository\UserRepository;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -48,28 +49,13 @@ class VtigerSettingProvider
     }
 
     /**
-     * @return Integration
-     */
-    public function getIntegrationEntity(): ?Integration
-    {
-        if (null === $this->integration) {
-            try {
-                $integrationObject       = $this->integrationsHelper->getIntegration(VtigerCrmIntegration::NAME);
-                $this->integration       = $integrationObject->getIntegrationConfiguration();
-            } catch (IntegrationNotFoundException $exception) {
-                return null;
-            }
-        }
-
-        return $this->integration;
-    }
-
-    /**
      * @return array
      */
     public function getCredentials(): array
     {
-        if (null === $this->getIntegrationEntity()) {
+        try {
+            $this->getIntegrationEntity();
+        } catch (IntegrationNotFoundException $e) {
             return [];
         }
 
@@ -91,18 +77,6 @@ class VtigerSettingProvider
     }
 
     /**
-     * @return array
-     */
-    public function getSettings(): array
-    {
-        if (null === $this->getIntegrationEntity()) {
-            return [];
-        }
-
-        return $this->integration->getFeatureSettings();
-    }
-
-    /**
      * @param $settingName
      *
      * @return array|string
@@ -111,14 +85,41 @@ class VtigerSettingProvider
     {
         $settings = $this->getSettings();
 
-        if (!array_key_exists($settingName, $settings)) {
+        if (!array_key_exists($settingName, $settings['sync'])) {
             // todo debug only @debug
             throw new InvalidArgumentException(
                 sprintf('Setting "%s" does not exists, supported: %s',
-                    $settingName, join(', ', array_keys($settings))
+                    $settingName, join(', ', array_keys($settings['sync']))
                 ));
         }
 
-        return $settings[$settingName];
+        return $settings['sync'][$settingName];
+    }
+
+    /**
+     * @return Integration
+     *
+     * @throws IntegrationNotFoundException
+     */
+    private function getIntegrationEntity(): Integration
+    {
+        if (null === $this->integration) {
+            $integrationObject = $this->integrationsHelper->getIntegration(VtigerCrmIntegration::NAME);
+            $this->integration = $integrationObject->getIntegrationConfiguration();
+        }
+
+        return $this->integration;
+    }
+
+    /**
+     * @return SettingsObject
+     *
+     * @throws IntegrationNotFoundException
+     */
+    private function getSettings(): SettingsObject
+    {
+        $this->getIntegrationEntity();
+
+        return new SettingsObject($this->integration->getFeatureSettings());
     }
 }
