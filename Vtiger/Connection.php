@@ -229,7 +229,9 @@ class Connection
         $content = $response->getBody()->getContents();
 
         if ('OK' != $response->getReasonPhrase()) {
-            throw new SessionException('Server responded with an error');
+            throw new SessionException(
+                sprintf("Server responded with an error '%s'", $response->getReasonPhrase())
+            );
         }
 
         $content = json_decode($content);
