@@ -200,7 +200,14 @@ class Connection
 
         $response = $this->httpClient->post($this->getApiUrl(), ['form_params' => $payloadFinal]);
 
-        return $this->handleResponse($response, $this->getApiUrl(), $payloadFinal);
+        try {
+            $return = $this->handleResponse($response, $this->getApiUrl(), $payloadFinal);
+        } catch (SessionException $e) {
+            // @todo Session exceptions should be logged with CLI output but not ending with execution stop
+            $return = '';
+        }
+
+        return $return;
     }
 
     /**
@@ -353,6 +360,7 @@ class Connection
      */
     private function isAuthenticated(): bool
     {
+
         return !is_null($this->sessionId);
     }
 
