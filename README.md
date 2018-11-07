@@ -10,27 +10,27 @@
 
 | Mautic Field Type| VTiger Field Type     | Notes                                                 |
 | -----------------| ------------------    | ------------------------------------------------      |
-| Boolean          | Checkbox              | 													   |
-| Date             | Date                  |                                                       |
-| DateTime         | Date                  |                                                       |
-| Email            | Email                 |                                                       |
-| List - Country   | Picklist              | Needs to have all the countries added in Vtiger       |
-| Locale           | Picklist              | Needs to have all the locale options added in Vtiger  | 
-| Lookup           | Picklist              | Needs to have the same options on both Systems        |
-| Number           | Integer               |                                                       |
-| Number           | Decimal               |                                                       |
-| Number           | Currency              | Two decimals on Mautic side                           |
-| Number           | Percent               |                                                       |
+| Boolean          | Checkbox/Int/String   | Valid values on vt:1,0,true,false,empty,null	         |
+| Date             | Date/String           | Y-m-d,null                                            |
+| DateTime         | DateTime              | This type is not available for vtiger's custom fields |
+| Email            | Email/String          | Not validated                                         |
+| List - Country   | Picklist/String       | For picklistl; it needs to have all the countries added in Vtiger       |
+| Locale           | Picklist/String       | Needs to have all the locale options added in Vtiger  | 
+| Lookup           | Picklist/String       | If picklis; it needs to have the same options on both Systems        |
+| Number           | Integer/String        |                                                       |
+| Number           | Decimal               | Float                                                      |
+| Number           | Currency              | Two decimals both sides                           |
+| Number           | Percent               | Integer                                                     |
 | Phone            | Phone                 |                                                       |
-| Region           | Picklist              | Needs to have all the region options added in Vtiger  |
-| Select           | Picklist              | Needs to have same options on both Systems            |
+| Region           | Picklist/String       | Needs to have all the region options added in Vtiger  |
+| Select           | Picklist/String       | Needs to have same options on both Systems            |
 | Select - Multiple| Multi Select Combo Box| Needs to have same options on both systems            |
 | Text             | Text                  |                                                       |
 | Text             | Skype                 |                                                       |
 | Textarea         | Text Area             |                                                       |
-| Time             | Time                  |                                                       |
-| Timezone         | Picklist              | Needs to have all the Timezone Options added in Vtiger| 
-| URL              | URL                   |                                                       |
+| Time             | Time                  | hh:mm (24hrs) |
+| Timezone         | Picklist              | Needs to have all the Timezone Options added in Vtiger | 
+| URL              | URL                   | Not validated |
 
 ### Special fields
 
